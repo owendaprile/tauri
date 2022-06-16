@@ -1,0 +1,41 @@
+{
+    "app-id": "{{app_id}}",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "42",
+    "sdk": "org.gnome.Sdk",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.rust-stable"
+    ],
+    "command": "{{app_name}}",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--socket=pulseaudio",
+        "--device=dri"
+    ],
+    "build-options": {
+        "append-path": "/usr/lib/sdk/rust-stable/bin",
+        "env": {
+            "CARGO_HOME": "/run/build/{{app_name}}/cargo"
+        }
+    },
+    "modules": [
+        {
+            "name": "{{app_name}}",
+            "buildsystem": "simple",
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "../../../../../"
+                },
+                "generated-sources.json"
+            ],
+            "build-commands": [
+                "cargo --offline fetch --manifest-path ./src-tauri/Cargo.toml",
+                "cargo --offline build --manifest-path ./src-tauri/Cargo.toml --release",
+                "install -Dm755 ./src-tauri/target/release/app /app/bin/{{app_name}}"
+            ]
+        }
+    ]
+}

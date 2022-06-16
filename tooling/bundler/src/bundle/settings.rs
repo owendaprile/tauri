@@ -27,6 +27,8 @@ pub enum PackageType {
   Rpm,
   /// The Linux AppImage bundle (.AppImage).
   AppImage,
+  /// The Linux Flatpak bundle and manifest (.flatpak).
+  Flatpak,
   /// The macOS DMG bundle (.dmg).
   Dmg,
   /// The Updater bundle.
@@ -45,6 +47,7 @@ impl PackageType {
       "app" => Some(PackageType::MacOsBundle),
       "rpm" => Some(PackageType::Rpm),
       "appimage" => Some(PackageType::AppImage),
+      "flatpak" => Some(PackageType::Flatpak),
       "dmg" => Some(PackageType::Dmg),
       "updater" => Some(PackageType::Updater),
       _ => None,
@@ -61,6 +64,7 @@ impl PackageType {
       PackageType::MacOsBundle => "app",
       PackageType::Rpm => "rpm",
       PackageType::AppImage => "appimage",
+      PackageType::Flatpak => "flatpak",
       PackageType::Dmg => "dmg",
       PackageType::Updater => "updater",
     }
@@ -87,6 +91,8 @@ const ALL_PACKAGE_TYPES: &[PackageType] = &[
   PackageType::Dmg,
   #[cfg(target_os = "linux")]
   PackageType::AppImage,
+  #[cfg(target_os = "linux")]
+  PackageType::Flatpak,
   PackageType::Updater,
 ];
 
@@ -540,7 +546,7 @@ impl Settings {
     let mut platform_types = match target_os {
       "macos" => vec![PackageType::MacOsBundle, PackageType::Dmg],
       "ios" => vec![PackageType::IosBundle],
-      "linux" => vec![PackageType::Deb, PackageType::AppImage],
+      "linux" => vec![PackageType::Deb, PackageType::AppImage, PackageType::Flatpak],
       "windows" => vec![PackageType::WindowsMsi],
       os => {
         return Err(crate::Error::GenericError(format!(
