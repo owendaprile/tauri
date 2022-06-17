@@ -133,7 +133,7 @@ pub fn generate_data(
 }
 
 /// Generate the application desktop file and store it under the `data_dir`.
-fn generate_desktop_file(settings: &Settings, data_dir: &Path) -> crate::Result<()> {
+pub fn generate_desktop_file(settings: &Settings, data_dir: &Path) -> crate::Result<()> {
   let bin_name = settings.main_binary_name();
   let desktop_file_name = format!("{}.desktop", bin_name);
   let desktop_file_path = data_dir
@@ -269,7 +269,7 @@ fn copy_custom_files(settings: &Settings, data_dir: &Path) -> crate::Result<()> 
 }
 
 /// Generate the icon files and store them under the `data_dir`.
-fn generate_icon_files(settings: &Settings, data_dir: &Path) -> crate::Result<BTreeSet<DebIcon>> {
+pub fn generate_icon_files(settings: &Settings, data_dir: &Path) -> crate::Result<BTreeSet<DebIcon>> {
   let base_dir = data_dir.join("usr/share/icons/hicolor");
   let get_dest_path = |width: u32, height: u32, is_high_density: bool| {
     base_dir.join(format!(

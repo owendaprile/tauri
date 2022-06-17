@@ -6,7 +6,7 @@
     "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.rust-stable"
     ],
-    "command": "{{app_name}}",
+    "command": "{{main_binary}}",
     "finish-args": [
         "--share=ipc",
         "--socket=x11",
@@ -14,6 +14,8 @@
         "--socket=pulseaudio",
         "--device=dri"
     ],
+    "rename-desktop-file": "{{main_binary}}.desktop",
+    "rename-icon": "{{main_binary}}",
     "build-options": {
         "append-path": "/usr/lib/sdk/rust-stable/bin",
         "env": {
@@ -34,7 +36,10 @@
             "build-commands": [
                 "cargo --offline fetch --manifest-path ./src-tauri/Cargo.toml",
                 "cargo --offline build --manifest-path ./src-tauri/Cargo.toml --release",
-                "install -Dm755 ./src-tauri/target/release/app /app/bin/{{app_name}}"
+                {{#each binary}}
+                "install -Dm755 ./src-tauri/target/release/{{this}} /app/bin/{{this}}",
+                {{/each}}
+                "cp -r ./src-tauri/target/release/bundle/flatpak/usr/* /app"
             ]
         }
     ]
